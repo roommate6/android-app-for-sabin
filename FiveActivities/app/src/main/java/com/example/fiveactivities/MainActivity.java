@@ -27,6 +27,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(newNoteIntent);
     }
 
+    public void handleTrashEvent(View view) {
+        Intent accessTrashIntent = new Intent(this, TrashActivity.class);
+        startActivity(accessTrashIntent);
+    }
+
     private void initializeWidgets(){
         notesListView = findViewById(R.id.notesListView);
     }
@@ -36,26 +41,24 @@ public class MainActivity extends AppCompatActivity {
         databaseManager.populateNotes();
     }
 
-    private void setNoteAdapter(){
-        NoteAdapter noteAdapter = new NoteAdapter(getApplicationContext(), Note.getNonDeletedNotes());
+    private void setNoteAdapter() {
+        NoteAdapter noteAdapter = new NoteAdapter(this, Note.getNonDeletedNotes());
         notesListView.setAdapter(noteAdapter);
     }
 
     private void setOnClickListener() {
-        notesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Note selectedNote = (Note) notesListView.getItemAtPosition(position);
-                Intent editNoteIntent = new Intent(getApplicationContext(), NoteDetailsActivity.class);
-                editNoteIntent.putExtra(Note.NOTE_EDIT_EXTRA, selectedNote.getId());
-                startActivity(editNoteIntent);
-            }
+        notesListView.setOnItemClickListener((parent, view, position, id) -> {
+            Note selectedNote = (Note) notesListView.getItemAtPosition(position);
+            Intent editNoteIntent = new Intent(this, NoteDetailsActivity.class);
+            editNoteIntent.putExtra(Note.NOTE_EDIT_EXTRA, selectedNote.getId());
+            startActivity(editNoteIntent);
         });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        loadFromDatabaseToMemory();
         setNoteAdapter();
     }
 }

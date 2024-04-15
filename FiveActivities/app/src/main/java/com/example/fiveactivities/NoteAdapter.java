@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,9 +29,11 @@ public class NoteAdapter extends ArrayAdapter<Note>{
 
         TextView title = convertView.findViewById(R.id.cellTitle);
         TextView description = convertView.findViewById(R.id.cellDescription);
+        ImageView icon = convertView.findViewById(R.id.cellIcon);
 
         title.setText(note.getTitle());
         description.setText(note.getDescription());
+        icon.setImageResource(note.getIconResourceId(this.getContext()));
 
         return convertView;
     }

@@ -8,8 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -26,6 +26,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
     private static final String TITLE_FIELD = "title";
     private static final String DESCRIPTION_FIELD = "description";
     private static final String DELETED_FIELD = "deleted";
+    private static final String ICON_FIELD = "icon";
 
     @SuppressLint("SimpleDateFormat")
     private static final DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
@@ -58,6 +59,8 @@ public class SQLiteManager extends SQLiteOpenHelper {
                 .append(DESCRIPTION_FIELD)
                 .append(" TEXT, ")
                 .append(DELETED_FIELD)
+                .append(" TEXT, ")
+                .append(ICON_FIELD)
                 .append(" TEXT)");
 
         database.execSQL(query.toString());
@@ -76,6 +79,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
         contentValues.put(TITLE_FIELD, note.getTitle());
         contentValues.put(DESCRIPTION_FIELD, note.getDescription());
         contentValues.put(DELETED_FIELD, getStringFromDate(note.getDeleted()));
+        contentValues.put(ICON_FIELD, note.getIcon());
 
         database.insert(TABLE_NAME, null, contentValues);
     }
@@ -88,8 +92,16 @@ public class SQLiteManager extends SQLiteOpenHelper {
         contentValues.put(TITLE_FIELD, note.getTitle());
         contentValues.put(DESCRIPTION_FIELD, note.getDescription());
         contentValues.put(DELETED_FIELD, getStringFromDate(note.getDeleted()));
+        contentValues.put(ICON_FIELD, note.getIcon());
 
-        database.update(TABLE_NAME,contentValues, ID_FIELD + " =? "
+        database.update(TABLE_NAME, contentValues, ID_FIELD + " =? "
+                ,new String[]{ String.valueOf(note.getId())});
+    }
+
+    public void deleteNote(Note note) {
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        database.delete(TABLE_NAME, ID_FIELD + " =? "
                 ,new String[]{ String.valueOf(note.getId())});
     }
 
@@ -98,13 +110,15 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
         try(Cursor result = database.rawQuery("SELECT * FROM " + TABLE_NAME, null)){
             if(result.getCount() > 0) {
+                Note.notes = new ArrayList<>();
                 while(result.moveToNext()) {
                     int id = result.getInt(1);
                     String title = result.getString(2);
                     String description = result.getString(3);
                     String stringDeleted = result.getString(4);
+                    String icon = result.getString(5);
                     Date deleted = getDateFromString(stringDeleted);
-                    Note note = new Note(id, title, description, deleted);
+                    Note note = new Note(id, title, description, deleted, icon);
                     Note.notes.add(note);
                 }
             }
@@ -124,5 +138,9 @@ public class SQLiteManager extends SQLiteOpenHelper {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public void deleteDatabase(Context context) {
+        context.deleteDatabase(DATABASE_NAME);
     }
 }

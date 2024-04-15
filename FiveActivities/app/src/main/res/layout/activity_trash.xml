@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".TrashActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="NOTES"
+            android:text="TRASH"
             android:textSize="35sp"
             android:textColor="@color/white"
             android:textStyle="bold"
@@ -27,24 +27,15 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:backgroundTint="@color/darkGray"
+            android:layout_marginEnd="15dp"
             android:scaleType="centerCrop"
-            android:onClick="handleTrashEvent"
-            android:src="@drawable/trash" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+"
-            android:textSize="35sp"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:layout_gravity="end"
-            android:onClick="handleNewNoteEvent"/>
+            android:onClick="handleBackEvent"
+            android:src="@drawable/back" />
 
     </androidx.appcompat.widget.Toolbar>
 
     <ListView
-        android:id="@+id/notesListView"
+        android:id="@+id/trashNotesListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="3dp"

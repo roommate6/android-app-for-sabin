@@ -1,5 +1,7 @@
 package com.example.fiveactivities;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -11,19 +13,22 @@ public class Note {
     private String title;
     private String description;
     private Date deleted;
+    private String icon;
 
-    public Note(int id, String title, String description, Date deleted) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.deleted = deleted;
-    }
-
-    public Note(int id, String title, String description) {
+    public Note(int id, String title, String description, String icon) {
         this.id = id;
         this.title = title;
         this.description = description;
         deleted = null;
+        this.icon = icon;
+    }
+
+    public Note(int id, String title, String description, Date deleted, String icon) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.deleted = deleted;
+        this.icon = icon;
     }
 
     public int getId() {
@@ -58,6 +63,18 @@ public class Note {
         this.deleted = deleted;
     }
 
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public int getIconResourceId(Context context) {
+        return context.getResources().getIdentifier(getIcon(), "drawable", context.getPackageName());
+    }
+
     public static Note getNoteWithId(int id) {
         for (Note note : notes) {
             if(note.getId() == id){
@@ -77,5 +94,17 @@ public class Note {
         }
 
         return nonDeletedNotes;
+    }
+
+    public static ArrayList<Note> getDeletedNotes(){
+        ArrayList<Note> deletedNotes = new ArrayList<>();
+
+        for (Note note : notes){
+            if (note.getDeleted() != null) {
+                deletedNotes.add(note);
+            }
+        }
+
+        return deletedNotes;
     }
 }

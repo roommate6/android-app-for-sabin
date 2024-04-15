@@ -6,20 +6,20 @@
     android:padding="15dp">
 
     <ImageView
-        android:id="@+id/cellIcon"
+        android:id="@+id/cellIcon3"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_gravity="center_vertical"
         android:src="@drawable/star"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/cellTitle"
+            android:id="@+id/cellTitle2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Title"
@@ -29,7 +29,7 @@
             android:textSize="25sp" />
 
         <TextView
-            android:id="@+id/cellDescription"
+            android:id="@+id/cellDescription2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Description"
@@ -37,6 +37,32 @@
             android:layout_marginTop="5dp"
             android:textColor="@color/darkGray"
             android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="end"
+        android:layout_marginStart="10dp">
+
+        <ImageButton
+            android:id="@+id/cellRevertButton"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:backgroundTint="@color/white"
+            android:scaleType="centerCrop"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/undo" />
+
+        <ImageButton
+            android:id="@+id/cellPermanentDeleteButton"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:backgroundTint="@color/white"
+            android:scaleType="centerCrop"
+            android:layout_gravity="end"
+            android:src="@drawable/trash" />
 
     </LinearLayout>
 
