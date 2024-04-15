@@ -2,32 +2,60 @@ package com.example.fiveactivities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    private ListView listView = null;
-    private CustomArrayAdapter adapter = null;
-    private String[] imageNames = {"Brasov Centrul Vechi", "Brasov Main Street", "Brasov Biserica Newagra"};
-    private int [] imageIds = {R.drawable.brasov_1, R.drawable.brasov_2, R.drawable.brasov_3};
+    private ListView notesListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listView = findViewById(R.id.listView);
-        adapter = new CustomArrayAdapter(this, R.layout.item_layout, imageNames, imageIds);
-        listView.setAdapter(adapter);
+        initializeWidgets();
+        setOnClickListener();
+        loadFromDatabaseToMemory();
+        setNoteAdapter();
+    }
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    public void handleNewNoteEvent(View view) {
+        Intent newNoteIntent = new Intent(this, NoteDetailsActivity.class);
+        startActivity(newNoteIntent);
+    }
+
+    private void initializeWidgets(){
+        notesListView = findViewById(R.id.notesListView);
+    }
+
+    private void loadFromDatabaseToMemory() {
+        SQLiteManager databaseManager = SQLiteManager.getInstance(this);
+        databaseManager.populateNotes();
+    }
+
+    private void setNoteAdapter(){
+        NoteAdapter noteAdapter = new NoteAdapter(getApplicationContext(), Note.getNonDeletedNotes());
+        notesListView.setAdapter(noteAdapter);
+    }
+
+    private void setOnClickListener() {
+        notesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(MainActivity.this,imageNames[i], Toast.LENGTH_SHORT).show();
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Note selectedNote = (Note) notesListView.getItemAtPosition(position);
+                Intent editNoteIntent = new Intent(getApplicationContext(), NoteDetailsActivity.class);
+                editNoteIntent.putExtra(Note.NOTE_EDIT_EXTRA, selectedNote.getId());
+                startActivity(editNoteIntent);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setNoteAdapter();
     }
 }
